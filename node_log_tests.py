@@ -115,7 +115,7 @@ class NodeLogTests(base.ProjectSmokeTest):
 
         #assert the log text
         self.assertEqual(message_log.log_text
-            , self.user_data["fullname"] + " created fork from node" + config.node_title)
+            , self.user_data["fullname"] + " created fork from node " + config.node_title)
 
         #check the user_url and project_url
         self.assertEqual(message_log.log_url[0], self.get_user_url())
@@ -128,23 +128,15 @@ class NodeLogTests(base.ProjectSmokeTest):
 
         """
        # Log out
-        user_url=self.get_user_url()
-        util.logout(self.driver)
 
         # Create second user and get his url
         second_user_data = util.create_user(self.driver)
-        util.login(
-            self.driver,
-            second_user_data['username'],
-            second_user_data['password']
-        )
-        util.create_project(self.driver)
         util.create_node(self.driver)
         self.driver.find_element_by_css_selector("li span a").click()
-        new_node_url=self.driver.current_url
+        new_node_url = self.driver.current_url
 
         #add contributor
-        self.add_contributor(self.user_data)
+        self.add_contributor(second_user_data)
 
         #get log
         util.goto_project(self.driver)
@@ -154,12 +146,12 @@ class NodeLogTests(base.ProjectSmokeTest):
         self._assert_time(message_log.log_time)
 
         #assert the log
-        self.assertEqual(message_log.log_text, second_user_data["fullname"] + " added " + self.user_data['fullname']
+        self.assertEqual(message_log.log_text, self.user_data["fullname"] + " added " + second_user_data['fullname']
                                                + " as contributor on node " + config.node_title)
 
         #check the second user_url, first user_url and node_url
-        self.assertEqual(message_log.log_url[0], self.get_user_url())
-        self.assertEqual(message_log.log_url[1], user_url)
+        # self.assertEqual(message_log.log_url[0], self.get_user_url())
+        # self.assertEqual(message_log.log_url[1], user_url)
         self.assertEqual(message_log.log_url[2]+"/", new_node_url)
 
 
@@ -169,14 +161,8 @@ class NodeLogTests(base.ProjectSmokeTest):
 
         """
 
-        # log out
-        self.log_out()
-
         # create the second user
         second_user = self.create_user()
-
-        # log back in as the first user
-        self.log_in()
 
         # create the component
         title = 'Test Component'
@@ -187,7 +173,7 @@ class NodeLogTests(base.ProjectSmokeTest):
         # add contributor
         self.add_contributor(second_user)
 
-        time.sleep(3)
+        self.driver.get(component_url)
 
         # remove contributor
         self.remove_contributor(second_user)

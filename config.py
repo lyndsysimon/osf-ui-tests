@@ -7,7 +7,8 @@ selenium_wait_time = 5
 
 # 
 #osf_home = 'http://192.155.89.121'
-osf_home = 'http://50.116.49.207'
+#osf_home = 'http://50.116.49.207'
+osf_home = 'http://localhost:5000'
 
 # Test project data
 project_title = 'test project'

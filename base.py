@@ -11,6 +11,7 @@ nose.
 # Imports
 from functools import wraps
 import os
+import requests
 import shutil
 import unittest
 
@@ -28,6 +29,8 @@ from datetime import datetime, timedelta
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait as wait
+
+from multi_base import MultiDriverTestCase
 
 
 class SmokeTest(unittest.TestCase):
@@ -51,6 +54,7 @@ class SmokeTest(unittest.TestCase):
         self.site_root = config.osf_home.strip('/')
         
     def tearDown(self):
+        pass
         
         # Quit Selenium
         # Note: Use WebDriver.quit() instead of WebDriver.close();
@@ -60,7 +64,7 @@ class SmokeTest(unittest.TestCase):
     def get_element(self, css):
         return wait(
             driver=self.driver,
-            timeout=5
+            timeout=3
         ).until(
             method=ec.visibility_of_element_located(
                 (By.CSS_SELECTOR, css)
@@ -86,14 +90,6 @@ class UserSmokeTest(SmokeTest):
             self.user_data['username'],
             self.user_data['password']
         )
-
-    def tearDown(self):
-        
-        # Log out
-        util.logout(self.driver)
-
-        # Call parent tearDown
-        super(UserSmokeTest, self).tearDown()
 
     def create_user(self):
         return util.create_user(self.driver)
@@ -199,7 +195,22 @@ class ProjectSmokeTest(UserSmokeTest):
 
     # Node methods
 
-    def add_contributor(self, user):
+    def add_contributor(self, user, use_ui=False):
+        # if not use_ui:
+        #     session = requests_login_session(self.user_data)
+        #     r = session.post(
+        #         '/'.join((self.project_url.strip('/'), 'addcontributor')),
+        #         {
+        #             'fullname': user['fullname'],
+        #             'email': user['username'],
+        #         },
+        #     )
+        #
+        #     with open('foo.html', 'w') as f:
+        #         f.write(r.content)
+        #
+        #     return r.content
+
         # click the "add" link
         self.get_element('#contributors a[href="#addContributors"]').click()
 
@@ -586,3 +597,16 @@ def _generate_full_filepaths(file_dict):
         }
 
     return file_dict
+
+
+def requests_login_session(user):
+    session = requests.Session()
+    r = session.post(
+        '/'.join((config.osf_home.strip('/'),'login')),
+        {
+            'username': user['username'],
+            'password': user['password'],
+        }
+    )
+
+    return session

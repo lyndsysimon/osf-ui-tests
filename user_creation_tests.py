@@ -19,10 +19,10 @@ import config
 class UserCreationTests(base.SmokeTest):
     
     def setUp(self):
-        
+
         # Call parent setUp
         super(UserCreationTests, self).setUp()
-        
+
         # Generate user data
         self.user_data = util.gen_user_data()
 
@@ -38,6 +38,7 @@ class UserCreationTests(base.SmokeTest):
             alert_text : Text to search for in alert box
 
         """
+        #self._setUp()
         
         # Prepend #'s to form keys
         id_form_data = {'#register-%s' % (k) : form_data[k] for k in form_data}

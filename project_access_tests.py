@@ -11,13 +11,15 @@ class ProjectSecurityTest(ProjectSmokeTest):
     def setUp(self):
         super(ProjectSecurityTest, self).setUp()
 
-        self.second_user = self.create_user()
+        self.second_user = self.create_user
 
     def test_add_contributor(self):
 
         # Add a contributor
         self.goto('dashboard')
         self.add_contributor(self.second_user)
+
+        import time; time.sleep(1)
 
         # Make sure they're in the contributors list
         self.assertTrue(

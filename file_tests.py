@@ -43,7 +43,7 @@ class FileHandlingTests(base.ProjectSmokeTest):
 
             # Get the src attribute of the image embedded
             src_filename = self.get_element(
-                '#file-container img[src*="{filename}"]'.format(
+                'div.span8 div.highlight img[src*="{filename}"]'.format(
                     filename=self.image_files[key]['filename']
                 )
             ).get_attribute('src').split('/')[-1]
@@ -64,7 +64,7 @@ class FileHandlingTests(base.ProjectSmokeTest):
 
             # make sure they match the contents of the <pre> element.
             self.assertEqual(
-                self.get_element('#file-container pre').text.strip(),
+                self.get_element('div.span8 div.highlight pre').text.strip(),
                 contents.strip(),
             )
 
@@ -78,8 +78,8 @@ class FileHandlingTests(base.ProjectSmokeTest):
             self.assertEqual(
                 set(
                     self.get_element(
-                        '#file-container pre'
-                    ).text.strip().split('\n')[1:]  # Exclude the first line.
+                        'div.span8 div.highlight pre'
+                    ).text.strip().split('\n')[2:]  # Exclude the first line.
                 ),
                 set(self.archive_file_contents)
             )
@@ -99,7 +99,7 @@ class FileHandlingTests(base.ProjectSmokeTest):
 
         # check that it is not rendered in the browser
         self.assertTrue(
-            'file is too large' in self.get_element('div#file-container').text
+            'file is too large' in self.get_element('div.span8 div.highlight').text
         )
 
         # delete the temp file we made
@@ -114,7 +114,7 @@ class FileHandlingTests(base.ProjectSmokeTest):
         self.goto('file', f['filename'])
 
         self.assertTrue(
-            'cannot be rendered' in self.get_element('div#file-container').text
+            'cannot be rendered' in self.get_element('div.span8 div.highlight').text
         )
 
     def test_most_recent_version_displayed(self):
@@ -123,7 +123,7 @@ class FileHandlingTests(base.ProjectSmokeTest):
         # assert that string from version 1 is present in embed.
         self.goto('file', f)
         self.assertTrue(
-            'Version 1' in self.get_element('#file-container pre').text.strip()
+            'Version 1' in self.get_element('div.span8 div.highlight pre').text.strip()
         )
 
     def test_version_history(self):
