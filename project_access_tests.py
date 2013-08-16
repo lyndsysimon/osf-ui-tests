@@ -169,6 +169,8 @@ class ProjectSecurityTest(ProjectSmokeTest):
         self.log_out()
         self.log_in()
 
+    def test_node_reordering(self):
+        self.
 
     @not_implemented
     def test_fork_with_private_components(self):
